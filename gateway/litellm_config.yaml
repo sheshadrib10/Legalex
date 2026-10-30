@@ -1,4 +1,18 @@
 model_list:
+  - model_name: kimi-k3-nvidia
+    litellm_params:
+      model: openai/moonshotai/kimi-k2.5
+      api_base: https://integrate.api.nvidia.com/v1
+      api_key: os.environ/NVIDIA_API_KEY
+      stream_options:
+        include_usage: true
+    model_info:
+      # NVIDIA NIM Free Developer Tier with 5x token metering in Legalex wallet
+      input_cost_per_token: 0.000015             # $15.00 / 1M tokens (5x)
+      cache_read_input_token_cost: 0.0000015     # $1.50 / 1M tokens (5x)
+      output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x)
+      supports_prompt_caching: true
+
   - model_name: kimi-k3
     litellm_params:
       model: openai/kimi-k3
@@ -14,7 +28,7 @@ model_list:
       output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x)
       supports_prompt_caching: true
 
-  - model_name: kimi-k3.1-pro
+
     litellm_params:
       model: openai/kimi-k3.1-pro
       api_base: https://api.moonshot.cn/v1
