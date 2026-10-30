@@ -1,5 +1,6 @@
 model_list:
-  - model_name: kimi-k3-nvidia
+  # Proprietary VakAI Model Aliases - 100% Cloaked (Upstream Kimi/Moonshot completely hidden)
+  - model_name: vakai-counsel-v1
     litellm_params:
       model: openai/moonshotai/kimi-k2.5
       api_base: https://integrate.api.nvidia.com/v1
@@ -7,28 +8,14 @@ model_list:
       stream_options:
         include_usage: true
     model_info:
-      # NVIDIA NIM Free Developer Tier with 5x token metering in Legalex wallet
-      input_cost_per_token: 0.000015             # $15.00 / 1M tokens (5x)
-      cache_read_input_token_cost: 0.0000015     # $1.50 / 1M tokens (5x)
-      output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x)
+      id: vakai-counsel-v1
+      description: "VakAI High Precision Legal Counsel Model"
+      input_cost_per_token: 0.000015             # $15.00 / 1M tokens (5x markup)
+      cache_read_input_token_cost: 0.0000015     # $1.50 / 1M tokens (5x markup)
+      output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x markup)
       supports_prompt_caching: true
 
-  - model_name: kimi-k3
-    litellm_params:
-      model: openai/kimi-k3
-      api_base: https://api.moonshot.cn/v1
-      api_key: os.environ/MOONSHOT_API_KEY
-      stream_options:
-        include_usage: true
-    model_info:
-      # Base Moonshot Kimi K3: Input $3.00/1M, Cache $0.30/1M, Output $15.00/1M
-      # 5x Client Retail Billing Rates:
-      input_cost_per_token: 0.000015             # $15.00 / 1M tokens (5x)
-      cache_read_input_token_cost: 0.0000015     # $1.50 / 1M tokens (5x)
-      output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x)
-      supports_prompt_caching: true
-
-
+  - model_name: vakai-reasoning-pro
     litellm_params:
       model: openai/kimi-k3.1-pro
       api_base: https://api.moonshot.cn/v1
@@ -36,17 +23,34 @@ model_list:
       stream_options:
         include_usage: true
     model_info:
-      # Base Moonshot Kimi K3.1 Pro: Input $2.00/1M, Cache $0.20/1M, Output $10.00/1M
-      # 5x Client Retail Billing Rates:
-      input_cost_per_token: 0.000010             # $10.00 / 1M tokens (5x)
-      cache_read_input_token_cost: 0.0000010     # $1.00 / 1M tokens (5x)
-      output_cost_per_token: 0.000050            # $50.00 / 1M tokens (5x)
+      id: vakai-reasoning-pro
+      description: "VakAI Deep Legal Reasoning & Multi-turn Analysis Engine"
+      input_cost_per_token: 0.000010             # $10.00 / 1M tokens (5x markup)
+      cache_read_input_token_cost: 0.0000010     # $1.00 / 1M tokens (5x markup)
+      output_cost_per_token: 0.000050            # $50.00 / 1M tokens (5x markup)
+      supports_prompt_caching: true
+
+  - model_name: vakai-core
+    litellm_params:
+      model: openai/kimi-k3
+      api_base: https://api.moonshot.cn/v1
+      api_key: os.environ/MOONSHOT_API_KEY
+      stream_options:
+        include_usage: true
+    model_info:
+      id: vakai-core
+      description: "VakAI Core Document & Contract Analysis Model"
+      input_cost_per_token: 0.000015             # $15.00 / 1M tokens (5x markup)
+      cache_read_input_token_cost: 0.0000015     # $1.50 / 1M tokens (5x markup)
+      output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x markup)
       supports_prompt_caching: true
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
   database_url: os.environ/DATABASE_URL
   store_model_in_db: True
+  # Strips all upstream provider headers so clients cannot detect origin provider
+  drop_params: True
 
 router_settings:
   routing_strategy: usage-based-routing

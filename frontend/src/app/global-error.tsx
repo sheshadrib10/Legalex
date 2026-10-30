@@ -17,7 +17,7 @@ export default function GlobalError({
     return (
         <html lang="en">
             <head>
-                <title>Something went wrong – Legalex</title>
+                <title>Something went wrong – VakAI</title>
             </head>
             <body className="font-sans antialiased">
                 <CrashScreen

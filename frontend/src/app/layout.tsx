@@ -5,8 +5,8 @@ import "./globals.css";
 import { Providers } from "@/app/components/providers";
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://legalex.ai"),
-    title: "Legalex - Open Legal AI Platform",
+    metadataBase: new URL("https://vakai.ai"),
+    title: "VakAI - Legal AI Platform",
     description:
         "AI-powered legal document review, contract analysis, and global case law research platform.",
     icons: {
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     },
     openGraph: {
         type: "website",
-        url: "https://legalex.ai",
-        siteName: "Legalex",
-        title: "Legalex - Open Legal AI Platform",
+        url: "https://vakai.ai",
+        siteName: "VakAI",
+        title: "VakAI - Legal AI Platform",
         description:
             "AI-powered legal document review, contract analysis, and global case law research platform.",
         images: [
@@ -28,13 +28,13 @@ export const metadata: Metadata = {
                 url: "/link-image.jpg",
                 width: 1200,
                 height: 651,
-                alt: "Legalex",
+                alt: "VakAI",
             },
         ],
     },
     twitter: {
         card: "summary_large_image",
-        title: "Legalex - Open Legal AI Platform",
+        title: "VakAI - Legal AI Platform",
         description:
             "AI-powered legal document review, contract analysis, and global case law research platform.",
         images: ["/link-image.jpg"],

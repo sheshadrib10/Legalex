@@ -16,10 +16,7 @@ export function SiteLogo({
     animate = false,
     asLink = false,
 }: SiteLogoProps) {
-    const landingHref =
-        process.env.NODE_ENV === "production"
-            ? "https://legalex.ai"
-            : "http://localhost:3000";
+    const landingHref = "/";
     const sizeClasses = {
         sm: "text-xl",
         md: "text-2xl",
@@ -45,7 +42,7 @@ export function SiteLogo({
             >
                 <MikeIcon size={iconSizes[size]} />
             </span>
-            <span className="font-semibold tracking-tight">Legalex</span>
+            <span className="font-semibold tracking-tight">VakAI</span>
         </h1>
     );
 

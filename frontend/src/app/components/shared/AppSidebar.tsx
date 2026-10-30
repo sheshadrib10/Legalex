@@ -272,7 +272,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             workspaceId !== PERSONAL_WORKSPACE &&
             organizations === null
           ? null
-          : "Legalex";
+          : "VakAI";
     const [recentProjects, setRecentProjects] = useState<Project[] | null>(
         null,
     );

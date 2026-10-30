@@ -237,13 +237,14 @@ export function modelDisplayName(modelId: string): string {
 const ROUTER_VENDOR_GROUPS: Record<string, string> = {
   anthropic: "Anthropic",
   claude: "Anthropic",
+  vakai: "VakAI",
   google: "Google",
   gemini: "Google",
   openai: "OpenAI",
   gpt: "OpenAI",
-  moonshot: "Moonshot AI",
-  moonshotai: "Moonshot AI",
-  kimi: "Moonshot AI",
+  moonshot: "VakAI",
+  moonshotai: "VakAI",
+  kimi: "VakAI",
   zhipu: "Zhipu AI",
   zhipuai: "Zhipu AI",
   zai: "Zhipu AI",
@@ -281,7 +282,7 @@ export function underlyingProviderGroup(
 
   if (router === "opencode-go") {
     if (/^glm-/i.test(catalogModelId)) return "Zhipu AI";
-    if (/^kimi-/i.test(catalogModelId)) return "Moonshot AI";
+    if (/^kimi-/i.test(catalogModelId)) return "VakAI";
     if (/^minimax-/i.test(catalogModelId)) return "MiniMax";
     if (/^qwen/i.test(catalogModelId)) return "Alibaba";
     if (/^deepseek-/i.test(catalogModelId)) return "DeepSeek";
