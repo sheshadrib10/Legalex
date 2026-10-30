@@ -24,7 +24,7 @@ import { safeError } from "../../../lib/safeError";
 import type { Db } from "../../../lib/supabase";
 import { buildUserMcpTools } from "../../../lib/mcpConnectors";
 import { buildGoogleDriveTools } from "../../../lib/integrations/googleDrive";
-import { COURTLISTENER_TOOLS } from "./tools/courtlistenerTools";
+import { GLOBAL_LEGAL_TOOLS } from "./tools/globalLegalTools";
 import { createProviderWebSearchTracker } from "./tools/providerWebSearch";
 import {
   MIKE_WEB_SEARCH_SYSTEM_PROMPT,
@@ -385,7 +385,7 @@ export async function runLLMStream(params: {
   const write = (chunk: string) =>
     unsafeWrite(sanitizeAssistantSseChunk(chunk));
   const isSubagent = subagentRun !== undefined;
-  const researchTools = includeResearchTools ? COURTLISTENER_TOOLS : [];
+  const researchTools = includeResearchTools ? GLOBAL_LEGAL_TOOLS : [];
   // The person's own connections for the workspace this conversation is in.
   const connectorTools =
     subagentRun?.connectorTools ??

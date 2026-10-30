@@ -1,106 +1,126 @@
-# Global Legal Sources Integration Guide
+# Legalex Global Legal Intelligence Architecture
 
-Legalex is engineered to operate across international jurisdictions. Below are established, authoritative, free and open-access legal databases and APIs across **India, Singapore, Europe, and the United States**, along with instructions on how to connect them.
-
----
-
-## 1. India: Indian Kanoon & Judicial Portals
-
-### A. Indian Kanoon (The Primary Free Database)
-* **Website:** [indiankanoon.org](https://indiankanoon.org/)
-* **Developer API:** [api.indiankanoon.org](https://api.indiankanoon.org/)
-* **What it Covers:**
-  * Supreme Court of India judgments (1950–Present).
-  * All 25 High Courts across India.
-  * Central Acts, Rules, and Law Commission Reports.
-  * Tribunals (NCLT, NCLAT, ITAT, CESTAT, Consumer Forums).
-* **Integration Pattern:**
-  * Use the Indian Kanoon Search API: `GET https://api.indiankanoon.org/search/?formInput={query}&pagenum=0`
-  * Citation lookup: `GET https://api.indiankanoon.org/doc/{docid}/`
-  * Use this to ground contract clauses against Indian Supreme Court precedents and the Indian Contract Act, 1872.
-
-### B. OpenNyAI (AI for Indian Judiciary)
-* **Website:** [opennyai.org](https://opennyai.org/)
-* **What it Covers:**
-  * Open-source legal NLP models trained specifically on Indian court judgments.
-  * Pre-trained models for Legal Named Entity Recognition (NER), Rhetorical Role labeling (Facts, Issue, Argument, Statute, Ratio), and judgment summarization.
-  * Completely open-weights and free to use.
-
-### C. India Code (Official Statutes Repository)
-* **Website:** [indiacode.nic.in](https://www.indiacode.nic.in/)
-* **What it Covers:**
-  * Official repository of all Central Acts and State legislation with full-text amendments.
-  * Public domain and accessible for statutory validation.
+This document specifies the authoritative legal research, agent invariants, and jurisdictional source routing for **Legalex**, derived from the battle-tested specifications in `SHULO_ARCHITECTURE_v3_12.md` (§38.1, §38.2, §38.2a, §38.2b).
 
 ---
 
-## 2. Singapore: Official & Open Legal Repositories
+## 1. The Three Mandatory Agent Invariants (§38.1)
 
-### A. Singapore Statutes Online (SSO)
-* **Website:** [sso.agc.gov.sg](https://sso.agc.gov.sg/)
-* **Managed by:** Attorney-General's Chambers (AGC) Singapore.
-* **What it Covers:**
-  * Complete, authoritative repository of Singapore Acts of Parliament and subsidiary legislation in force.
-  * Includes point-in-time search and historical amendment tracking.
-* **Access Mode:** Public web access with structured HTML/XML data endpoints.
+To prevent hallucinations, legal malpractice, and cross-border contamination, all Legalex agents operate under three non-negotiable architectural invariants:
 
-### B. AsianLII & CommonLII (Singapore Portal)
-* **Website:** [asianlii.org/sg](https://www.asianlii.org/sg/) / [commonlii.org](http://www.commonlii.org/sg/)
-* **Managed by:** Legal Information Institutes consortium (free access to law movement).
-* **What it Covers:**
-  * Singapore Court of Appeal (SGCA) and High Court (SGHC) decisions.
-  * Singapore State Court judgments.
-  * Patent and Trademark Decisions.
-  * Completely free, open access with searchable indices.
+### A. Jurisdiction Lock
+* Every legal session is locked to a specific jurisdiction namespace:
+  ```
+  legal.{JURISDICTION}.{task_type}.v1
+  ```
+* **Contamination Prevention:** US legal rules (e.g., UCC or federal common law) must **never** be cited to resolve an Indian Contract Act dispute or a Singapore Companies Act issue, and vice versa.
+* **Ambiguity Handling:** If a user brief does not specify the governing law and inference is ambiguous, the agent **never assumes**. It halts and surfaces a `CONFIDENCE_INSUFFICIENT` card: *"Please confirm the governing jurisdiction before I proceed."*
 
-### C. Singapore Law Watch (SLW)
-* **Website:** [singaporelawwatch.sg](https://www.singaporelawwatch.sg/)
-* **Managed by:** Singapore Academy of Law (SAL).
-* **What it Covers:**
-  * Free daily judgment digests and summaries from Singapore courts.
+### B. Citation Classification (Binding vs. Persuasive vs. Background)
+Every case citation is categorized into three strict tiers:
+1. **Binding Authority:** Statutes, regulations, and apex court decisions (Supreme Court of India, Singapore Court of Appeal, SCOTUS) within the locked jurisdiction.
+2. **Persuasive Authority:** Decisions from foreign common-law jurisdictions (e.g., UK House of Lords or Australian High Court cited in Singapore or India) or Law Commission reports. Agents must explicitly identify them as persuasive.
+3. **Background:** Secondary commentaries, law review articles, and legal digests.
+> Conflating binding and persuasive authority triggers an immediate quality failure.
 
----
+### C. Deterministic Good Law Verification (Zero-LLM)
+* Before any precedent enters the synthesis context, it passes through a deterministic dictionary lookup against a pre-indexed list of overruled decisions.
+* Overruled cases are automatically stamped **`CONTESTED`** with the overruling authority attached.
+* Implementation: [`backend/src/lib/jurisdictionGuard.ts`](../backend/src/lib/jurisdictionGuard.ts).
 
-## 3. Europe (EU & UK): Official Open APIs
-
-### A. EUR-Lex REST & Cellar SPARQL API
-* **Website:** [eur-lex.europa.eu](https://eur-lex.europa.eu/)
-* **What it Covers:**
-  * Official database of all European Union law.
-  * EU Treaties, Directives, Regulations, and Decisions.
-  * Case-law of the Court of Justice of the European Union (CJEU).
-* **API Access:**
-  * **Cellar REST API:** Direct document retrieval in PDF, HTML, and XML formats.
-  * **SPARQL Endpoint:** Structured semantic queries for cross-referencing EU directives and member-state transposition.
-  * 100% free with registration on EU Login.
-
-### B. HUDOC (European Court of Human Rights)
-* **Website:** [hudoc.echr.coe.int](https://hudoc.echr.coe.int/)
-* **What it Covers:**
-  * Case-law of the European Court of Human Rights (ECHR) and Commission.
-  * Free REST API endpoint: `https://hudoc.echr.coe.int/app/query/results` for keyword and citation queries.
-
-### C. BAILII (United Kingdom & Ireland)
-* **Website:** [bailii.org](https://www.bailii.org/)
-* **What it Covers:**
-  * UK Supreme Court, Court of Appeal, High Court, and Irish courts.
-  * Public legal information archive operated by the Institute of Advanced Legal Studies.
+### D. Mandatory Page-Level & Paragraph Grounding
+Every legal proposition must anchor to:
+* `source_page`
+* `source_paragraph`
+* Exact verbatim quotation from primary statutory or judicial text.
 
 ---
 
-## 4. United States: Primary Open Repositories
+## 2. Jurisdiction Sources: Free-First Stack (§38.2b)
 
-### A. CourtListener (Free Law Project)
-* **Website:** [courtlistener.com](https://www.courtlistener.com/)
-* **Supported natively in Legalex:** Set `COURTLISTENER_API_TOKEN` in `backend/.env`.
-* **What it Covers:**
-  * 400+ jurisdictions, federal and state appellate courts.
-  * Over 8 million searchable opinions and complete PACER docket data.
-  * Automated citation normalization and citator services.
+Legalex follows a **Free-First Retrieval Order**:
+1. Query free open-access legal databases first.
+2. Only escalate to paid databases via **BYO-MCP** if the free tier returns `CONFIDENCE_INSUFFICIENT`.
+3. Never hallucinate case law or scrape paywalled repositories.
 
-### B. Caselaw Access Project (CAP)
-* **Website:** [case.law](https://case.law/)
-* **Maintained by:** Harvard Law School.
-* **What it Covers:**
-  * 360 years of US legal history (6.7 million cases).
-  * Bulk datasets and open API available for academic and commercial legal tech use.
+---
+
+### 🇮🇳 INDIA (Primary Market)
+
+```python
+LEGAL_SOURCES_FREE_INDIA = "indian_kanoon_opennyai_inlegalbert_indiclegalqa"
+```
+
+| Component | Role in Legalex | Source / Implementation |
+| :--- | :--- | :--- |
+| **`InLegalBERT`** | **Domain-Specific Embeddings Router** | Pre-trained on Indian legal judgments. Used for vector indexing in `pgvector` so similarity searches understand Indian statutory phrasing. |
+| **`OpenNyAI`** | **Judicial NLP Models** | Open-source models for Legal Named Entity Recognition (NER), Rhetorical Role Labeling (*Facts, Issues, Arguments, Ratio Decidendi*), and headnote generation. |
+| **`IndicLegalQA`** | **Legal Q&A Synthesis** | Domain-tuned QA model for direct statutory synthesis over Central & State Acts. |
+| **`Indian Kanoon API`** | **Primary Case Law & Statutes (20M+)** | Live API client: [`backend/src/lib/indianKanoon.ts`](../backend/src/lib/indianKanoon.ts). Covers Supreme Court of India (1950–Present), all 25 High Courts, Tribunals (NCLT, NCLAT, ITAT), and Central Acts. |
+| **Enterprise Fallback** | **Manupatra & SCC Online** | Integrated via **BYO-MCP** (Bring-Your-Own Model Context Protocol). Law firms provide their own enterprise keys; Legalex never incurs per-seat database costs. |
+
+#### Deterministic Overruled List (India)
+* *A.D.M. Jabalpur v. Shivkant Shukla* → Overruled by *K.S. Puttaswamy v. Union of India (2017) 10 SCC 1* (Right to Privacy).
+* *P. Rathinam v. Union of India* → Overruled by *Gian Kaur v. State of Punjab (1996) 2 SCC 648* (Section 309 IPC).
+* *Suresh Kumar Koushal v. Naz Foundation* → Overruled by *Navtej Singh Johar v. Union of India (2018) 10 SCC 1*.
+* *A.K. Gopalan v. State of Madras* → Overruled by *Maneka Gandhi v. Union of India (1978) 1 SCC 248*.
+
+---
+
+### 🇸🇬 SINGAPORE
+
+```python
+LEGAL_SOURCES_FREE_SG = "singapore_statutes_online_supreme_court"
+```
+
+| Component | Role in Legalex | Source / Implementation |
+| :--- | :--- | :--- |
+| **Singapore Statutes Online (SSO)** | Authoritative public database for all Singapore Acts of Parliament and subsidiary legislation in force. | Scraped/parsed deterministically via Scrapling / structured XML. Adapter: [`backend/src/lib/singaporeLaw.ts`](../backend/src/lib/singaporeLaw.ts). |
+| **Supreme Court Open Judgments** | Decisions from the Court of Appeal (`SGCA`) and High Court (`SGHC`). | Harvested via AsianLII Singapore & Judiciary portal. |
+| **Enterprise Fallback** | **LexisNexis Singapore** | Integrated via BYO-MCP if the law firm holds an active enterprise subscription. |
+| **Data Sovereignty & Compliance** | **PDPA & MAS TRM** | Singapore legal instances route strictly to AWS `ap-southeast-1` to comply with the Personal Data Protection Act and MAS Technology Risk Management guidelines. |
+
+#### Deterministic Overruled List (Singapore)
+* *Royal Bank of Scotland v. Pekin* → Overruled by *OCBC v. Sin Ann Builders [2008] SGCA 25*.
+* *Lim Chin San v. Michael* → Overruled by *Spandeck Engineering v. DSTA [2007] SGCA 37* (Two-stage duty of care test).
+
+---
+
+### 🇪🇺 EUROPE (EU & UK)
+
+```python
+LEGAL_SOURCES_FREE_EU = "eur_lex_curia"
+LEGAL_SOURCES_FREE_UK = "bailii_legislation_gov_uk_law_commission"
+```
+
+* **EUR-Lex (Cellar REST & SPARQL API):** Official EU law repository covering EU Treaties, Directives, Regulations, and Court of Justice of the European Union (CJEU) jurisprudence.
+* **HUDOC API:** European Court of Human Rights (ECHR) open-access database and REST search API.
+* **BAILII & legislation.gov.uk:** Free access to UK Supreme Court (`UKSC`), Court of Appeal (`EWCA`), High Court (`EWHC`), and all UK Acts of Parliament.
+
+---
+
+### 🇺🇸 UNITED STATES
+
+```python
+LEGAL_SOURCES_FREE_US = "courtlistener_cornell_lii_sec_edgar"
+```
+
+* **CourtListener (Free Law Project):** Live API client natively integrated in [`backend/src/lib/courtlistener.ts`](../backend/src/lib/courtlistener.ts). Over 8 million searchable opinions, citation normalization, and citator feeds.
+* **Cornell LII:** Primary source for US Code (statutes) and Code of Federal Regulations (CFR).
+* **SEC EDGAR:** Full access to public company filings, 10-Ks, M&A agreements, and material corporate disclosures.
+
+---
+
+## 3. Tool Dispatching in Legalex Engine
+
+All global research tools are bundled together and made available to the assistant turn engine via [`backend/src/modules/chat/engine/tools/globalLegalTools.ts`](../backend/src/modules/chat/engine/tools/globalLegalTools.ts):
+
+* `courtlistener_search_case_law`
+* `courtlistener_get_cases`
+* `courtlistener_find_in_case`
+* `courtlistener_read_case`
+* `courtlistener_verify_citations`
+* `indian_kanoon_search`
+* `indian_kanoon_get_doc`
+* `singapore_statutes_search`
+* `verify_good_law` (Zero-LLM verification)
