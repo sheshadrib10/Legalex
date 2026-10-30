@@ -18,7 +18,7 @@ export function SiteLogo({
 }: SiteLogoProps) {
     const landingHref =
         process.env.NODE_ENV === "production"
-            ? "https://mikeoss.com"
+            ? "https://legalex.ai"
             : "http://localhost:3000";
     const sizeClasses = {
         sm: "text-xl",
@@ -45,7 +45,7 @@ export function SiteLogo({
             >
                 <MikeIcon size={iconSizes[size]} />
             </span>
-            <span>Mike</span>
+            <span className="font-semibold tracking-tight">Legalex</span>
         </h1>
     );
 

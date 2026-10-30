@@ -1,0 +1,31 @@
+model_list:
+  - model_name: kimi-k3
+    litellm_params:
+      model: openai/kimi-k3
+      api_base: https://api.moonshot.cn/v1
+      api_key: os.environ/MOONSHOT_API_KEY
+      stream_options:
+        include_usage: true
+
+  - model_name: kimi-k3.1-pro
+    litellm_params:
+      model: openai/kimi-k3.1-pro
+      api_base: https://api.moonshot.cn/v1
+      api_key: os.environ/MOONSHOT_API_KEY
+      stream_options:
+        include_usage: true
+
+general_settings:
+  master_key: os.environ/LITELLM_MASTER_KEY
+  database_url: os.environ/DATABASE_URL
+  store_model_in_db: True
+
+router_settings:
+  routing_strategy: usage-based-routing
+  enable_pre_call_checks: True
+
+litellm_settings:
+  success_callback: ["cache"]
+  cache: True
+  cache_params:
+    type: "local"

@@ -1,112 +1,96 @@
-# Mike
+# Legalex: Open Enterprise Legal AI Platform
 
-![Mike](docs/assets/link-image.jpg)
+**Legalex** is an open-source, enterprise-grade legal AI platform engineered for document review, contract analysis, and global legal research across **Singapore, India, Europe, and the United States**.
 
-Mike (MikeOSS) is an open-source legal AI platform for document review,
-drafting, and legal research.
+Built as an open-access alternative to proprietary legal tech tools, Legalex empowers law firms, corporate legal departments, and solo practitioners with complete data sovereignty, flexible model routing, and zero-leakage token metering.
 
-It combines a Next.js frontend, an Express backend, Supabase Auth/Postgres,
-and Cloudflare R2-compatible object storage.
+---
 
-Website: [mikeoss.com](https://mikeoss.com)
+## Key Capabilities
 
-![Mike assistant home screen](docs/assets/mike-home.png)
+* **Document Vaults & Legal Chat:** Upload matter files (contracts, pleadings, briefs, depositions) into isolated workspaces and query them with contextual citations.
+* **Tabular Contract Review:** Bulk-review 100+ agreements simultaneously, extract key clauses (indemnity, governing law, termination), and flag deviations.
+* **Global Legal Research:**
+  * **India:** Direct integration points with **Indian Kanoon** and OpenNyAI for Supreme Court & High Court jurisprudence.
+  * **Singapore:** Integration with **Singapore Statutes Online (SSO)** and AsianLII.
+  * **Europe:** Direct integration with **EUR-Lex API (Cellar)** and HUDOC (ECHR).
+  * **United States:** Native **CourtListener** integration for case law search and citation verification.
+* **Zero-Leakage AI Metering:** Decoupled **LiteLLM Gateway** architecture for per-user Virtual API keys, budget enforcement, prompt-cache accounting, and Moonshot Kimi K3 integration.
+* **Zero Fixed Cloud Cost:** Architected to run on permanent free-tier cloud infrastructure (Supabase, Cloudflare R2, Vercel).
 
-## Features
+---
 
-- Chat with legal documents and open matters
-- Review documents and apply suggested edits
-- Run reusable assistant and tabular-review workflows
-- Organize projects, folders, and a document library
-- Verify citations and research US case law with CourtListener
-- Work from Microsoft Word with the task-pane add-in
-- Run supported language models locally through Ollama
+## Architecture Overview
 
-## Quick start
+```
+                      ┌──────────────────────────────────────────────┐
+                      │             Legalex Next.js UI               │
+                      │        (Deployed Free on Vercel)             │
+                      └──────────────────────┬───────────────────────┘
+                                             │
+                      ┌──────────────────────┴───────────────────────┐
+                      │            Legalex Express API               │
+                      │        (Deployed Free on Render)             │
+                      └──────────────┬───────────────────────────────┘
+                                     │
+           ┌─────────────────────────┼─────────────────────────┐
+           │                         │                         │
+           ▼                         ▼                         ▼
+┌─────────────────────┐   ┌─────────────────────┐   ┌─────────────────────┐
+│  LiteLLM Gateway    │   │ Supabase (Postgres) │   │ Cloudflare R2       │
+│  • Virtual API Keys │   │ • Matter Metadata   │   │ • S3 Document Vault │
+│  • Token Metering   │   │ • User Auth & RLS   │   │ • $0 Egress Fees    │
+│  • Kimi K3 Wrapper  │   │ • pgvector Search   │   │ • 10 GB Free        │
+└──────────┬──────────┘   └─────────────────────┘   └─────────────────────┘
+           │
+           ▼
+┌─────────────────────┐
+│ Moonshot Kimi API   │
+│  (Single Master Key)│
+└─────────────────────┘
+```
 
-The included Docker Compose stack runs Mike, Supabase, RustFS object storage,
-and local email capture without requiring managed infrastructure.
+---
 
-1. Copy the local environment templates:
+## Quick Start (Local Development)
 
-   ```bash
-   cp .env.example .env
-   cp backend/.env.example backend/.env
-   ```
+### 1. Clone the Repository
+```bash
+git clone https://github.com/sheshadrib10/Legalex.git
+cd Legalex
+```
 
-2. In `backend/.env`, set `DOWNLOAD_SIGNING_SECRET` and
-   `USER_API_KEYS_ENCRYPTION_SECRET` to separate values generated with:
+### 2. Configure Environment Secrets
+Copy the sample environment file:
+```bash
+cp .env.example .env
+```
+Key variables:
+* `DATABASE_URL`: Connection string to your local or Supabase PostgreSQL instance.
+* `OPENAI_BASE_URL`: URL of your LiteLLM gateway (`http://localhost:4000/v1` or public URL).
+* `COURTLISTENER_API_TOKEN`: Free token from [courtlistener.com](https://www.courtlistener.com/).
 
-   ```bash
-   openssl rand -hex 32
-   ```
+### 3. Start with Docker Compose
+```bash
+docker compose up -d
+```
+Access the application:
+* **Frontend Web App:** `http://localhost:3000`
+* **Backend API:** `http://localhost:3001`
+* **LiteLLM Admin Dashboard:** `http://localhost:4000/ui`
 
-3. Add an Anthropic, Gemini, or OpenAI API key to `backend/.env`, unless you
-   plan to use Ollama exclusively.
+---
 
-4. Start the stack:
+## Global Sources & Integrations
 
-   ```bash
-   docker compose up --build
-   ```
+For comprehensive instructions on connecting legal databases across Singapore, India, Europe, and the US, read [`docs/LEGAL_SOURCES_GLOBAL.md`](docs/LEGAL_SOURCES_GLOBAL.md).
 
-5. Open [http://localhost:3000](http://localhost:3000) and create an account.
+## Free-Tier Cloud Deployment
 
-To stop, run `npm run stack:down` rather than `docker compose stop`: stopped
-containers are never removed on their own and keep images and volumes in use.
-See "Stop and clean up" in `docs/local-development.md`.
+For step-by-step instructions on deploying Legalex at **$0/month** on Supabase, Cloudflare R2, and Vercel, read [`docs/DEPLOYMENT_FREE_TIER.md`](docs/DEPLOYMENT_FREE_TIER.md).
 
-The bundled credentials and infrastructure are intended for local development
-only. See [Local development](docs/local-development.md) for service endpoints,
-authentication behavior, Ollama setup, and first-run guidance.
-
-### Telemetry
-
-Mike sends scrubbed error reports (no document content, user identities, or
-request data) to the project's Sentry by default. Set `SENTRY_DISABLED=true` to
-opt out, or set `SENTRY_DSN` to use your own. See the
-[observability guide](docs/observability.md) for the exact policy, per-runtime
-variables, and the [Sentry data audit](docs/sentry-data-audit.md).
-
-## Repository
-
-| Path | Purpose |
-| --- | --- |
-| `frontend/` | Next.js web application |
-| `backend/` | Express API, document processing, and database access |
-| `word-addin/` | Microsoft Word task-pane add-in |
-| `backend/schema.sql` | Complete schema for fresh databases |
-| `backend/migrations/` | Dated migrations for existing deployments |
-| `docker-compose.yml` | Local application and infrastructure stack |
-| `docs/` | Development, deployment, testing, and feature guides |
-
-## Documentation
-
-- [Documentation index](docs/README.md)
-- [Local development](docs/local-development.md)
-- [Manual and production deployment](docs/deployment.md)
-- [Troubleshooting](docs/troubleshooting.md)
-- [MCP connectors](docs/connectors.md)
-- [Google Workspace: Drive, Gmail, and Calendar](docs/google-workspace.md)
-- [CourtListener integration](docs/courtlistener.md)
-- [Microsoft Word add-in](word-addin/README.md)
-- [Tamper-evident exports](docs/tamper-evident-exports.md)
-- [Safe local testing](docs/safe-local-testing.md)
-- [Preset contract templates and publisher credits](docs/preset-templates.md)
-- [End-to-end testing and CI](docs/e2e-ci.md)
-- [Contributing](CONTRIBUTING.md)
-- [Open-source credits](CREDITS.md)
-- [Security policy](SECURITY.md)
-
-## System workflows
-
-Mike's system assistant and tabular-review workflows are maintained in the
-[`Open-Legal-Products/mike-workflows`](https://github.com/Open-Legal-Products/mike-workflows)
-repository. See [Contributing](CONTRIBUTING.md#system-workflows) for how they are
-packaged and synchronized with this application.
+---
 
 ## License
 
-Mike is available under the [GNU Affero General Public License v3.0](LICENSE).
-Bundled [public contract templates](docs/preset-templates.md#maintaining-the-catalog)
-retain their publishers' separate licenses and notices.
+Legalex is open-source software licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
