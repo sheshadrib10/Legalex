@@ -21,19 +21,21 @@ const PROTECTED_PREFIXES = [
 export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
+    const hasSession =
+        request.cookies.has(AUTH_COOKIE) ||
+        request.cookies.has(LEGACY_AUTH_COOKIE);
+
+    if (pathname === "/") {
+        const target = hasSession ? "/assistant" : "/login";
+        return NextResponse.redirect(new URL(target, request.url));
+    }
+
     const isProtected = PROTECTED_PREFIXES.some(
         (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
     );
 
-    if (isProtected) {
-        const hasSession =
-            request.cookies.has(AUTH_COOKIE) ||
-            request.cookies.has(LEGACY_AUTH_COOKIE);
-
-        if (!hasSession) {
-            const loginUrl = new URL("/login", request.url);
-            return NextResponse.redirect(loginUrl);
-        }
+    if (isProtected && !hasSession) {
+        return NextResponse.redirect(new URL("/login", request.url));
     }
 
     return NextResponse.next();
