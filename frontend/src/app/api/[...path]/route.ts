@@ -31,6 +31,23 @@ async function proxy(request: NextRequest, context: RouteContext) {
     const requestPath = `/${path.map(encodeURIComponent).join("/")}`;
 
     const requestId = randomUUID();
+
+    if (
+        requestPath === "/auth/session" &&
+        !request.headers.get("cookie")?.includes("session")
+    ) {
+        return Response.json(
+            { code: "unauthorized", detail: "Authentication required" },
+            {
+                status: 401,
+                headers: {
+                    "x-request-id": requestId,
+                    "content-type": "application/json",
+                },
+            },
+        );
+    }
+
     let stage = "gateway-config";
     try {
         const upstreamUrl = new URL(`${backendOrigin()}${requestPath}`);
@@ -71,6 +88,18 @@ async function proxy(request: NextRequest, context: RouteContext) {
             headers: responseHeaders,
         });
     } catch (error) {
+        if (requestPath === "/auth/session") {
+            return Response.json(
+                { code: "unauthorized", detail: "Authentication required" },
+                {
+                    status: 401,
+                    headers: {
+                        "x-request-id": requestId,
+                        "content-type": "application/json",
+                    },
+                },
+            );
+        }
         // A connection-level failure (ECONNREFUSED, DNS, reset, connect
         // timeout) means the backend is down or misaddressed: an operator
         // condition, not an application bug, and every request fails the
