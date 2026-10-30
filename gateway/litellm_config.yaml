@@ -6,6 +6,13 @@ model_list:
       api_key: os.environ/MOONSHOT_API_KEY
       stream_options:
         include_usage: true
+    model_info:
+      # Base Moonshot Kimi K3: Input $3.00/1M, Cache $0.30/1M, Output $15.00/1M
+      # 5x Client Retail Billing Rates:
+      input_cost_per_token: 0.000015             # $15.00 / 1M tokens (5x)
+      cache_read_input_token_cost: 0.0000015     # $1.50 / 1M tokens (5x)
+      output_cost_per_token: 0.000075            # $75.00 / 1M tokens (5x)
+      supports_prompt_caching: true
 
   - model_name: kimi-k3.1-pro
     litellm_params:
@@ -14,6 +21,13 @@ model_list:
       api_key: os.environ/MOONSHOT_API_KEY
       stream_options:
         include_usage: true
+    model_info:
+      # Base Moonshot Kimi K3.1 Pro: Input $2.00/1M, Cache $0.20/1M, Output $10.00/1M
+      # 5x Client Retail Billing Rates:
+      input_cost_per_token: 0.000010             # $10.00 / 1M tokens (5x)
+      cache_read_input_token_cost: 0.0000010     # $1.00 / 1M tokens (5x)
+      output_cost_per_token: 0.000050            # $50.00 / 1M tokens (5x)
+      supports_prompt_caching: true
 
 general_settings:
   master_key: os.environ/LITELLM_MASTER_KEY
