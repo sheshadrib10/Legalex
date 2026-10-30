@@ -70,6 +70,8 @@ export const AUTH_COOKIE_NAME =
         ? "__Host-mike-session"
         : "mike-session";
 
+export const LEGACY_AUTH_COOKIE_NAME = "mike-session";
+
 export function createAuthCookieHeader(token: string): string {
     const isProd = process.env.NODE_ENV === "production";
     const flags = [
