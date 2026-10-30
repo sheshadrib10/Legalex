@@ -13,7 +13,7 @@ is incomplete. This report is not a merge-readiness sign-off.**
 ## September 24 live Assistant review
 
 A fresh Chrome conversation, **Google Integrations Acceptance Review**, was run
-against the real local deployment and the requested MikeOSS client. No provider
+against the real local deployment and the requested Legalex client. No provider
 responses were mocked. Drive search/read returned the four expected fixture
 values (18 months, California, 45 days, violet otter 7391), independently checked
 against the source Google Doc. Calendar list/search/read returned the synthetic
@@ -77,7 +77,7 @@ affected workflows completed successfully after the fix.
 ## Latest live flow: Drive search and read
 
 The Drive read was repeated successfully on `8af69de4` (application code
-`c26a2d72`) using the requested MikeOSS client. A fresh Assistant conversation
+`c26a2d72`) using the requested Legalex client. A fresh Assistant conversation
 searched only for `MIKE-GOOGLE-20260923-native-doc`, invoked the live Drive read
 tool, and returned **18 months**, **California**, **45 days**, and **violet otter
 7391**, matching the private synthetic source. The complete answer was visually
@@ -125,7 +125,7 @@ Calendar UI control recovered. No successful write GIF is claimed.
 - Local Supabase and disposable S3-compatible storage; synthetic documents only.
 - Live model tests used the model key saved in the disposable Mike test user's
   profile. No credential is included in this report or the screenshots.
-- Requested Google project: `soy-oarlock-503613-m7`, OAuth client MikeOSS.
+- Requested Google project: `soy-oarlock-503613-m7`, OAuth client Legalex.
   Organization-owned project; OAuth audience is **External / Testing**.
   This is not evidence of an Internal Workspace audience or administrator policy.
 - The old `mikeamal` connections were removed before this run. All eight old-client
@@ -311,7 +311,7 @@ created in the selected Google account through Google's UI. A real Assistant
 request searched for that exact title and read only that document. Its answer
 matched all four source assertions: **18 months**, **California**, **45 days**,
 and **violet otter 7391**. This ran on `ecf95dae` before the subsequent rebase,
-using the requested MikeOSS client. The screenshot below shows the actual
+using the requested Legalex client. The screenshot below shows the actual
 `Google Drive: read_file` activity. The completed answer was verified in the
 accessibility tree; the screenshot viewport does not show the full answer table.
 

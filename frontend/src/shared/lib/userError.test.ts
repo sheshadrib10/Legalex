@@ -248,7 +248,7 @@ describe("buildSupportMailto", () => {
                 requestId: "req-42",
             },
             {
-                page: "https://app.mikeoss.com/projects/1",
+                page: "https://app.legalex.ai/projects/1",
                 product: "web",
                 when: new Date("2026-09-17T10:00:00Z"),
             },
@@ -263,7 +263,7 @@ describe("buildSupportMailto", () => {
         expect(body).toContain("Request ID: req-42");
         expect(body).toContain("Error code: internal_error");
         expect(body).toContain("HTTP status: 500");
-        expect(body).toContain("Page: https://app.mikeoss.com/projects/1");
+        expect(body).toContain("Page: https://app.legalex.ai/projects/1");
         expect(body).toContain("Client: web");
         expect(body).toContain("Time: 2026-09-17T10:00:00.000Z");
         expect(body).toContain("Browser: TestBrowser/1");

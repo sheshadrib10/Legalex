@@ -3,7 +3,7 @@
 **Goal.** A user downloads `Mike.app` and everything runs locally on their Mac —
 no Docker, no separate server, no cloud dependency (except LLM API calls, which
 are supplied per-user via Settings → API Keys, env vars, or a local Ollama).
-This complements the hosted default (`https://app.mikeoss.com`): hosted stays
+This complements the hosted default (`https://app.legalex.ai`): hosted stays
 the zero-friction path; "Run locally on this Mac" becomes a third mode next to
 hosted and self-hosted-URL on the connect screen.
 

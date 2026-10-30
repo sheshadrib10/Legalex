@@ -321,7 +321,7 @@ export function OpenSourceWorkflowModal({
                                             className="cursor-pointer"
                                         >
                                             GitHub repository and on the
-                                            mikeoss.com website.
+                                            legalex.ai website.
                                         </label>
                                     </p>
                                 </div>

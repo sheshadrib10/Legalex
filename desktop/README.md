@@ -49,7 +49,7 @@ normal browser or a remote deployment receives no local guest credentials.
 
 The self-contained build first offers **Start on this Mac** or **Use Mike Cloud**,
 with a link to a firm server. The shell-only build (`npm run dist`) defaults to
-the hosted service at `https://app.mikeoss.com` and requires sign-in there.
+the hosted service at `https://app.legalex.ai` and requires sign-in there.
 Self-hosters can change the connection through ⌘⇧, or the overrides below.
 Local mode supervises the bundled Mike stack on loopback, without Docker or a
 separately installed server; it creates an authenticated account only inside
@@ -111,7 +111,7 @@ npm start -- --server-url=http://localhost:3000
 An explicit `--server-url=<url>` CLI flag, or then `MIKE_SERVER_URL`, overrides
 local mode and saved settings. Otherwise `--local` or a saved local choice uses
 the bundled frontend; remote mode uses the saved server URL or
-`https://app.mikeoss.com`. A fresh self-contained installation shows the welcome
+`https://app.legalex.ai`. A fresh self-contained installation shows the welcome
 chooser. Settings live in `~/Library/Application Support/Mike/settings.json`;
 tests use an isolated `MIKE_USER_DATA_DIR`.
 
@@ -126,7 +126,7 @@ tests use an isolated `MIKE_USER_DATA_DIR`.
 
 ```bash
 npm run dist   # → dist/mac-arm64/Mike.app (unsigned)
-open dist/mac-arm64/Mike.app   # loads https://app.mikeoss.com
+open dist/mac-arm64/Mike.app   # loads https://app.legalex.ai
 ```
 
 **A locally-built app runs without any Gatekeeper prompt** — the "damaged / can't

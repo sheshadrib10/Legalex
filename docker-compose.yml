@@ -1,4 +1,4 @@
-# MikeOSS — full local stack, one `docker compose up`. No external accounts.
+# Legalex — full local stack, one `docker compose up`. No external accounts.
 # Supabase is embedded (db + auth + rest + gateway); storage is RustFS.
 # The only thing you must supply is one model API key in backend/.env.
 #

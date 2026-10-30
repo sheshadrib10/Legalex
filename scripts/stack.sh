@@ -80,7 +80,7 @@ default_project() {
 
 # Is this compose file ours? It is identified by the marker on its first lines
 # rather than by path, so worktrees and renamed checkouts are all recognised.
-is_mike_compose_file() { [ -f "$1" ] && head -5 "$1" | grep -q 'MikeOSS'; }
+is_mike_compose_file() { [ -f "$1" ] && head -5 "$1" | grep -q 'Legalex'; }
 
 # Inventories print "-" for empty fields (a bare tab would be collapsed by
 # `read`); blank() maps it back to the empty string.

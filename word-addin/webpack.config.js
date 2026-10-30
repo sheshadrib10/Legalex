@@ -309,7 +309,7 @@ module.exports = async (_env, options) => {
         // The Mike web app origin — the task pane links here (e.g. the
         // account/api-keys page); it never fetches from it.
         REACT_APP_WEB_APP_URL: isDev
-          ? process.env.REACT_APP_WEB_APP_URL || "https://app.mikeoss.com"
+          ? process.env.REACT_APP_WEB_APP_URL || "https://app.legalex.ai"
           : undefined,
         // Sentry is off unless a DSN is baked in at build time (the pane is
         // a static bundle; there is no runtime environment to read).

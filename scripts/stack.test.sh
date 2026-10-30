@@ -53,7 +53,7 @@ fixture() {
     local dir=$1 marker=$2
     mkdir -p "$dir"
     {
-        [ "$marker" = mike ] && echo "# MikeOSS — test fixture (marker line recognised by scripts/stack.sh)"
+        [ "$marker" = mike ] && echo "# Legalex — test fixture (marker line recognised by scripts/stack.sh)"
         cat <<'EOF'
 services:
   job:

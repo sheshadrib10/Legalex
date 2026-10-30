@@ -243,7 +243,7 @@ function SignupContent() {
                             <div className="text-center text-xs text-gray-500">
                                 By signing up, you agree to our{" "}
                                 <Link
-                                    href="https://mikeoss.com/terms"
+                                    href="https://legalex.ai/terms"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-blue-600 hover:underline"
@@ -252,7 +252,7 @@ function SignupContent() {
                                 </Link>{" "}
                                 and{" "}
                                 <Link
-                                    href="https://mikeoss.com/privacy"
+                                    href="https://legalex.ai/privacy"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-blue-600 hover:underline"

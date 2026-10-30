@@ -12,7 +12,7 @@
  * framework-free and must not import from `frontend/src/app/`.
  */
 
-export const SUPPORT_EMAIL = "will@mikeoss.com";
+export const SUPPORT_EMAIL = "support@legalex.ai";
 
 export type UserErrorKind =
     | "offline"
@@ -111,9 +111,9 @@ export function networkMessage(origin?: string): string {
     // Naming the origin is for self-hosters, whose own server may be the
     // thing that is down, so that variant also says to check the server.
     if (origin) {
-        return `Mike couldn't reach the server at ${origin}. Check your connection and that the server is running, then try again.`;
+        return `Legalex couldn't reach the server at ${origin}. Check your connection and that the server is running, then try again.`;
     }
-    return "Mike couldn't reach the server. Check your connection and try again.";
+    return "Legalex couldn't reach the server. Check your connection and try again.";
 }
 
 /**
@@ -136,7 +136,7 @@ const KIND_MESSAGES: Record<UserErrorKind, string> = {
     payload_too_large: "That's too large to upload.",
     rate_limited: "Too many requests. Wait a moment and try again.",
     unavailable:
-        "Mike is temporarily unavailable. Try again in a moment.",
+        "Legalex is temporarily unavailable. Try again in a moment.",
     server: SERVER_FAILURE_MESSAGE,
     unknown: GENERIC_FAILURE_MESSAGE,
 };
@@ -435,7 +435,7 @@ export function buildSupportMailto(
 ): string {
     const when = context.when ?? new Date();
     const lines: string[] = [
-        "Hi Mike team,",
+        "Hi Legalex team,",
         "",
         "I ran into a problem and need help.",
         "",
@@ -448,7 +448,7 @@ export function buildSupportMailto(
     lines.push(...supportDetailLines(error, { ...context, when }));
     lines.push("", "Thanks,");
 
-    const subject = `Mike support: ${error.title}`;
+    const subject = `Legalex support: ${error.title}`;
     const params = new URLSearchParams({
         subject,
         body: lines.join("\n"),

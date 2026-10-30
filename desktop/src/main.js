@@ -29,7 +29,7 @@ const { pathToFileURL } = require("url");
 // mode runs the ENTIRE stack on this Mac (src/local/supervisor.js): the
 // connect screen offers it, and once chosen the shell boots the local
 // services and loads the local frontend.
-const DEFAULT_SERVER_URL = "https://app.mikeoss.com";
+const DEFAULT_SERVER_URL = "https://app.legalex.ai";
 const LOCAL_FRONTEND_URL = require("./local/config").FRONTEND_URL;
 const CONNECT_PAGE = path.join(__dirname, "pages", "connect.html");
 const LOCAL_BOOT_PAGE = path.join(__dirname, "pages", "local-boot.html");

@@ -23,7 +23,7 @@ severity after that.
 
 - Reports about the code, default configuration, and deployment guidance in
   this repo are all in scope.
-- The **hosted service at `app.mikeoss.com`** (the cloud version offered from
+- The **hosted service at `app.legalex.ai`** (the cloud version offered from
   the official Mike website) is in scope — report issues affecting it through
   the same private channel above, and please keep testing non-destructive:
   only accounts and data you own, no denial of service, no access to other
